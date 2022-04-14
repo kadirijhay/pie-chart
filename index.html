@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clickable Pie Chart</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      .chartCard {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .chartBox {
+        width: 500px;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chartCard">
+      <div class="chartBox">
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // setup 
+    const data = {
+      labels: ['Google', 'Amazon', 'Microsoft', 'Apple'],
+      datasets: [{
+        label: 'Companies',
+        data: [
+            { country: 'Google', url: 'https://google.com', percentage: 40 },
+            { country: 'Amazon', url: 'https://amazon.com', percentage: 30 },
+            { country: 'Microsoft', url: 'https://microsoft.com', percentage: 20 },
+            { country: 'Apple', url: 'https://apple.com', percentage: 10 }
+        ],
+        backgroundColor: [
+          'rgba(255, 26, 104, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(0, 0, 0, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 26, 104, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(0, 0, 0, 1)'
+        ],
+        borderWidth: 0
+      }]
+    };
+
+    // config 
+    const config = {
+      type: 'pie',
+      data,
+      options: {
+        parsing: {
+            key: 'percentage'
+        }
+      }
+    };
+
+    // render init block
+    const context = document.getElementById('myChart')
+    const myChart = new Chart(
+      context,
+      config
+    );
+
+    function pieLink(click) {
+        const clickedInfo = myChart.getElementsAtEventForMode(click, 'nearest', {
+            intersect: true
+        }, true);
+        if(clickedInfo.length) {
+            const pieSlice = clickedInfo[0]
+            const link = myChart.data.datasets[pieSlice.datasetIndex].data[pieSlice.index].url;
+            // location.href = link
+            window.open(link);
+        }
+    }
+    context.onclick = pieLink
+    </script>
+
+  </body>
+</html>
